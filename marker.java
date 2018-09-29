@@ -21,9 +21,9 @@ class parkingMark{
     float lat;
     float lng;
 
-    private List<String> lot_names = new ArrayList<>();
+    //private List<String> lot_names = new ArrayList<>();
 
-    public void setGarage(String name){
+    public void setName(String name){
         lot = name;
     }
 
@@ -48,10 +48,17 @@ class parkingMark{
     }
 }
 
-Iterator eachPark = park.Iterator();
+class ParkingLotData{
 
-for(int i; i < park.size(); i++){
-    
+    public List<parkingMark> lots = new ArrayList<>();
 
-
+    public void ParkingLotData(){
+        for(int i; i < park.size(); i++){
+            parkingMark temp_lot = new parkingMark();
+            temp_lot.setName(park[i].lot);
+            temp_lot.setLat(park[i].lat);
+            temp_lot.setLng(park[i].lng);
+            lots.add(temp_lot);
+        }
+    } 
 }
