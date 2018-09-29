@@ -1,0 +1,119 @@
+{
+    "parking": [
+        {
+            "lot": "Lake Avenue (G11)",
+            "lat": "35.954130",
+            "lng": "-83.934816"
+        },
+        {
+            "lot": "West Campus (G7)",
+            "lat": "35.957470",
+            "lng": "-83.932900"
+        },
+        {
+            "lot": "White Ave (G12)",
+            "lat": "35.958040",
+            "log": "-83.932033"
+        },
+        {
+            "lot": "Volunteer Hall (G15)",
+            "lat": "35.959092",
+            "log": "-83.929785"
+        },
+        {
+            "lot": "Volunteer Blvd (G16)",
+            "lat": "35.951109",
+            "log": "-83.929719"
+        },
+        {
+            "lot": "Laurel Hall (N21 and N14)",
+            "lat": "35.959106",
+            "log": "-83.931725"
+        },
+        {
+            "lot": "Lake Ave lots (N10, 11, and 12)",
+            "lat": "35.953207",
+            "log": "-83.937551"
+        },
+        {
+            "lot": "Caledonia Ave lots (N2)",
+            "lat": "35.951575",
+            "log": "-83.938390"
+        },
+        {
+            "lot": "Caledonia Ave lots (N8, N9)",
+            "lat": "35.953746",
+            "log": "-83.934237"
+        },
+        {
+            "lot": "Caledonia Ave lots (N19)",
+            "lat": "35.952363",
+            "log": "-83.937082"
+        },
+        {
+            "lot": "Caledonia Ave lots (N20)",
+            "lat": "35.952753",
+            "log": "-83.936029"
+        },
+        {
+            "lot": "Carrick Fire Lane (N5)",
+            "lat": "35.952398",
+            "log": "83.935536"
+        },
+        {
+            "lot": "Terrace Ave (N18)",
+            "lat": "35.952194",
+            "log": "-83.938393"
+        },
+        {
+            "lot": "Neyland (G10) ",
+            "lat": "35.953285",
+            "log": "-83.923924"
+        },
+        {
+            "lot": "NEW Terrace Ave (G17)",
+            "lat": "",
+            "log": ""
+        },
+        {
+            "lot": "White Ave (G12)",
+            "lat": "35.958149",
+            "log": "-83.931887"
+        },
+        {
+            "lot": "11th Street (G13)",
+            "lat": "35.959646",
+            "log": "-83.925261"
+        },
+        {
+            "lot": "Volunteer Blvd (G16)",
+            "lat": "35.951118",
+            "log": "-83.929725"
+        },
+        {
+            "lot": "Lake Loudoun Blvd (C6 and 8)",
+            "lat": "35.951423",
+            "log": "-83.926426"
+        },
+        {
+            "lot": "Todd Helton Dr (C1 and 22)",
+            "lat": "35.948333",
+            "log": "-83.930079"
+        },
+        {
+            "lot": "Church lot off Poplar St (C26)",
+            "lat": "35.959370",
+            "log": "-83.922019"
+        },
+        {
+            "lot": "2nd Creek near Ming Kao (C18 – NEW location)",
+            "lat": "35.958933",
+            "log": "-83.922755"
+        },
+        {
+            "lot": "Ag Campus (C4 and CF)",
+            "lat": "35.947100",
+            "log": "-83.942591"
+        }
+    ]
+}
