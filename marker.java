@@ -14,6 +14,8 @@ JSONObject parking = (JSONObject) obj;
 
 JSONArray park = (JSONArray) park.get("parking");
 
+
+
 class parkingMark{
     String lot;
     float lat;
@@ -33,53 +35,23 @@ class parkingMark{
         lng = lngIn;
     }
 
-    public List<> getName(){
+    public String getName(){
+        return lot;
+    }
 
+    public float getLat(){
+        return lat;
+    }
+
+    public float getLng(){
+        return lng;
     }
 }
 
 Iterator eachPark = park.Iterator();
 
-for(){
+for(int i; i < park.size(); i++){
+    
+
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-public String getGarage(String lotIn) {
-    for(Object i : "parking"){
-        parkingMark  = new parkingMark();
-    }
-    return lot;
-}
-
-public float getLat(float latIn) {
-    for(Object i : "parking"){
-        float lat = this.i.lat;
-    }
-    return lat;
-}
-
-public float getLng(float lng) {
-    park.lng = lng;
-    return lng;
-}
-
-public void listLots() {
-
-}
-
