@@ -55,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(test1));
 
         LatLngBounds UTK = new LatLngBounds(
-                new LatLng(35.961374, -83.948197), new LatLng(35.963441, -83.919879));
+                new LatLng(35.966447, -83.921553), new LatLng(35.934409, -83.957216));
         // Constrain the camera target to the UTK bounds.
         mMap.setLatLngBoundsForCameraTarget(UTK);
         enableMyLocation();
