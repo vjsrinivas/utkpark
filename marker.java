@@ -1,4 +1,6 @@
 package javaapplication1;
+package com.volhack.utkpark;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,15 +12,17 @@ import org.json.simple.parser.ParseException;
 
 Object obj = new JSONParser().rparse(new FileReader("pakingcords.json"));
 
-JSONObject parking = (JSONObject) obj;
+//JSONObject parking = (JSONObject) obj;
 
-JSONArray park = (JSONArray) park.get("parking");
+//JSONArray park = (JSONArray) park.get("parking");
 
-class parkingMark{
+class ParkingMark{
     String lot;
     float lat;
     float lng;
 
+    JSONObject parking = (JSONObject) obj;
+    JSONArray park = (JSONArray) park.get("parking");
     //private List<String> lot_names = new ArrayList<>();
 
     public void setName(String name){
