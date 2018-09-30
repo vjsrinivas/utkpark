@@ -14,8 +14,6 @@ JSONObject parking = (JSONObject) obj;
 
 JSONArray park = (JSONArray) park.get("parking");
 
-
-
 class parkingMark{
     String lot;
     float lat;
@@ -60,5 +58,5 @@ class ParkingLotData{
             temp_lot.setLng(park[i].lng);
             lots.add(temp_lot);
         }
-    } 
+    }
 }
