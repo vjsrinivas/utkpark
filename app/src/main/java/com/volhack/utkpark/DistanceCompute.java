@@ -2,6 +2,8 @@ package com.volhack.utkpark;
 
 import android.os.AsyncTask;
 
+import com.google.android.gms.tasks.Task;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,11 +19,9 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DistanceCompute extends AsyncTask<String[], Void, JSONObject> {
+class DistanceUtil{
 
-    private static InputStream requestMatrixDistance(String[] base, String[] params){
-        //base only 1 item always
-        String base_url = base[0];
+    public static InputStream requestMatrixDistance(String base_url, String[] params){
         for(int i=0; i < params.length; i++){
             if(i==0) {
                 base_url += "?" + params[i];
@@ -55,7 +55,7 @@ public class DistanceCompute extends AsyncTask<String[], Void, JSONObject> {
         return in;
     }
 
-    private static String convertStreamToString(InputStream inputStream) throws IOException {
+    public static String convertStreamToString(InputStream inputStream) throws IOException {
         if (inputStream != null) {
             Writer writer = new StringWriter();
 
@@ -75,25 +75,70 @@ public class DistanceCompute extends AsyncTask<String[], Void, JSONObject> {
         }
     }
 
-    protected JSONObject doInBackground(String[]... str_base){
-        //str_base contains url_base and params
-        String raw_json;
-        //System.out.println("hi!");
+}
+
+//only for Distance Matrix
+public class DistanceCompute extends AsyncTask<TaskParams, Void, JSONObject> {
+
+    protected JSONObject doInBackground(TaskParams... taskData){
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json";
+        //taskData[0].lotData
+        //taskData[0].pos
+        //run loop and shit through lots
+        int shortestDistance;
+        int shortestDistanceIndex = 0;
+
+
         try {
-            raw_json = convertStreamToString(requestMatrixDistance(str_base[0], str_base[1]));
-            System.out.println(raw_json);
-        }
-        catch(IOException e){
-             //System.out.println("hi!");
-             return null;
-             //raw_json = "";
-        }
-        try {
-            JSONObject json = new JSONObject(raw_json);
-            return json;
-        }
-        catch(JSONException e) {
+            //run first one to initalize:
+            String params[] = {"units=imperial", "origins=" + taskData[0].pos[0] + "," + taskData[0].pos[1], "destinations="+taskData[1].lotData.lots.get(1).getLat()+","+taskData[1].lotData.lots.get(1).getLng(), "key=AIzaSyA571UCwHR860O78oW_xnGHri6lOhXzXns"};
+            //str_base contains url_base and params
+            String raw_json;
+            raw_json = DistanceUtil.convertStreamToString(DistanceUtil.requestMatrixDistance(url, params));
+            try {
+                JSONObject json = new JSONObject(raw_json);
+
+            } catch (JSONException e) {
+                return null;
+            }
+        } catch (IOException e) {
+            //System.out.println("hi!");
             return null;
+            //raw_json = "";
         }
+
+        //System.out.println("hi!"+taskData[0].lotData.lots.size());
+        //System.out.println(taskData[0].lotData.lots.get(i).getName());
+
+
+
+        for(int i = 1; i < taskData[0].lotData.lots.size(); i++)
+        {
+            String params[] = {"units=imperial", "origins=" + taskData[0].pos[0] + "," + taskData[0].pos[1], "destinations="+taskData[1].lotData.lots.get(i).getLat()+","+taskData[1].lotData.lots.get(i).getLng(), "key=AIzaSyA571UCwHR860O78oW_xnGHri6lOhXzXns"};
+            //str_base contains url_base and params
+            String raw_json;
+            //System.out.println("hi!");
+            try {
+                raw_json = DistanceUtil.convertStreamToString(DistanceUtil.requestMatrixDistance(url, params));
+            } catch (IOException e) {
+                //System.out.println("hi!");
+                return null;
+                //raw_json = "";
+            }
+
+
+            try {
+                JSONObject json = new JSONObject(raw_json);
+                return json;
+            } catch (JSONException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    protected JSONObject onPostExecute(JSONObject... result) {
+        MapsActivity.determineShortestPath(result[0]);
+        return result[0];
     }
 }

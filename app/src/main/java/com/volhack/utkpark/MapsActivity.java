@@ -1,5 +1,6 @@
 package com.volhack.utkpark;
 
+import android.graphics.Path;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -23,11 +24,25 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.PolyUtil;
+
+import org.json.JSONObject;
+
+class TaskParams{
+    ParkingLotData lotData;
+    double pos[] = {0,0};
+
+    TaskParams(ParkingLotData lotData, double pos[]){
+        this.lotData = lotData;
+        this.pos = pos;
+    }
+
+}
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
     private static final int MY_LOCATION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
@@ -105,7 +120,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //mMap.setOnMarkerClickListener(this);
 
         enableMyLocation();
-        LatLng test1 = new LatLng(35.958627, -83.924662);
         if(!mPermissionDenied) {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             mFusedLocationClient.getLastLocation()
@@ -114,16 +128,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
-                                LatLng initial_location = new LatLng(location.getLatitude(), location.getLongitude());
+                                double coor[] = {location.getLatitude(), location.getLongitude()};
+                                LatLng initial_location = new LatLng(coor[0], coor[1]);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initial_location, 17.0f));
+                                TaskParams taspar = new TaskParams(storedData, coor);
+                                new DistanceCompute().execute(taspar);
                             }
                         }
                     });
 
-
-            String params[] = {"units=imperial", "origins=35.958800,-83.924836", "destinations=35.957405,-83.924350", "key=AIzaSyA571UCwHR860O78oW_xnGHri6lOhXzXns"};
-            String url[] = {"https://maps.googleapis.com/maps/api/distancematrix/json"};
-            new DistanceCompute().execute(url, params);
+            //String params_1[] = {""}
+            addPolyLine("udnzEnrf_ONzAb@vDJbAf@zBHNRJj@zBTv@x@]lEoBl@WTMGGQQOq@Cw@Eq@A_AHcBA_@OyAI_@q@yBUo@IKWM[EU@UHi@\\");
         }
     }
 
@@ -184,5 +199,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void showMissingPermissionError() {
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
+    }
+
+    private void addPolyLine(String polypath){
+        List<LatLng> decodedPath = PolyUtil.decode(polypath);
+        PolylineOptions polyop = new PolylineOptions().addAll(decodedPath);
+        polyop.color(0xFFFF8200);
+        mMap.addPolyline(polyop);
+        //mMap.clear();
+    }
+
+    public static void determineShortestPath(JSONObject data){
+
     }
 }
