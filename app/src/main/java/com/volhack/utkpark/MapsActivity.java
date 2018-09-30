@@ -34,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
+    private ParkingLotData storedData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Constrain the camera target to the UTK bounds.
         mMap.setLatLngBoundsForCameraTarget(UTK);
 
+        //Adds the marker according to the parking garage data
+        List<Marker> marks = new ArrayList<>();
+        for(int k; k < storedData.size(); k++){
+            Marker temp_mark;
+            temp_mark = mMap.addMarker(new MarkerOptions()
+            .position(new LatLng(storedData[k].getLat(), storedData[k].getLng()))
+            .title(storeData[k].getName()));
+            marks.add(temp_mark);
+            temp_mark.setTag(0);
+        }        
+
+        // Set a listener for marker click.
+        mMap.setOnMarkerClickListener(this);
+
         enableMyLocation();
         LatLng test1 = new LatLng(35.958627, -83.924662);
         if(!mPermissionDenied) {
@@ -106,6 +121,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+    /* //Called when the user clicks a marker.
+     @Override
+     public boolean onMarkerClick(final Marker marker) {
+         // Retrieve the data from the marker.
+        Change the variable type to what you want to return 
+        Integer clickCount = (Integer) marker.getTag();
+    } */
 
     //EDITED
     /**
