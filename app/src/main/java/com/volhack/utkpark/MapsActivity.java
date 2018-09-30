@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.location.Location;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
+import java.util.*;
 
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -24,6 +24,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.maps.model.Marker;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -77,7 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMinZoomPreference(17.0f);
+        mMap.setMinZoomPreference(15.0f);
         // Add a marker in Sydney and move the camera
         //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -89,17 +90,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Adds the marker according to the parking garage data
         List<Marker> marks = new ArrayList<>();
-        for(int k; k < storedData.size(); k++){
+        storedData = new ParkingLotData();
+
+        for(int k=0; k < storedData.lots.size(); k++){
             Marker temp_mark;
             temp_mark = mMap.addMarker(new MarkerOptions()
-            .position(new LatLng(storedData[k].getLat(), storedData[k].getLng()))
-            .title(storeData[k].getName()));
+            .position(new LatLng(storedData.lots.get(k).getLat(), storedData.lots.get(k).getLng()))
+            .title(storedData.lots.get(k).getName()));
             marks.add(temp_mark);
             temp_mark.setTag(0);
         }        
 
         // Set a listener for marker click.
-        mMap.setOnMarkerClickListener(this);
+        //mMap.setOnMarkerClickListener(this);
 
         enableMyLocation();
         LatLng test1 = new LatLng(35.958627, -83.924662);
@@ -112,11 +115,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 LatLng initial_location = new LatLng(location.getLatitude(), location.getLongitude());
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(initial_location));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initial_location, 17.0f));
                             }
                         }
                     });
 
+
+            String params[] = {"units=imperial", "origins=35.958800,-83.924836", "destinations=35.957405,-83.924350", "key=AIzaSyA571UCwHR860O78oW_xnGHri6lOhXzXns"};
+            String url[] = {"https://maps.googleapis.com/maps/api/distancematrix/json"};
+            new DistanceCompute().execute(url, params);
         }
     }
 
