@@ -16,8 +16,9 @@ import java.io.BufferedInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 class DistanceUtil{
 
@@ -78,43 +79,60 @@ class DistanceUtil{
 }
 
 //only for Distance Matrix
-public class DistanceCompute extends AsyncTask<TaskParams, Void, JSONObject> {
+public class DistanceCompute extends AsyncTask<TaskParams, Void, double[]> {
 
-    protected JSONObject doInBackground(TaskParams... taskData){
+    protected double[] doInBackground(TaskParams... taskData){
         String url = "https://maps.googleapis.com/maps/api/distancematrix/json";
-        //taskData[0].lotData
-        //taskData[0].pos
+        double[] coor = {taskData[0].pos[0],taskData[0].pos[1],0,0};
         //run loop and shit through lots
-        int shortestDistance;
-        int shortestDistanceIndex = 0;
-
+        double shortestDistance;
+        JSONObject shortestDistanceIndex;
+        JSONParser parser = new JSONParser();
 
         try {
             //run first one to initalize:
-            String params[] = {"units=imperial", "origins=" + taskData[0].pos[0] + "," + taskData[0].pos[1], "destinations="+taskData[1].lotData.lots.get(1).getLat()+","+taskData[1].lotData.lots.get(1).getLng(), "key=AIzaSyA571UCwHR860O78oW_xnGHri6lOhXzXns"};
+            String params[] = {"units=imperial", "origins=" + taskData[0].pos[0] + "," + taskData[0].pos[1], "destinations="+taskData[0].lotData.lots.get(0).getLat()+","+taskData[0].lotData.lots.get(0).getLng(), "key=AIzaSyA571UCwHR860O78oW_xnGHri6lOhXzXns"};
             //str_base contains url_base and params
             String raw_json;
             raw_json = DistanceUtil.convertStreamToString(DistanceUtil.requestMatrixDistance(url, params));
             try {
-                JSONObject json = new JSONObject(raw_json);
+                JSONObject json = (JSONObject) parser.parse(raw_json);
+                JSONArray temp = (JSONArray) json.get("rows");
+                JSONObject temp2 =  (JSONObject) temp.get(0);
+                temp = (JSONArray) temp2.get("elements");
+                temp2 = (JSONObject) temp.get(0);
+                temp2 =  (JSONObject) temp2.get("duration");
+                String time = (String) temp2.get("text");
+                String newer="";
+                for (char ch: time.toCharArray()) {
+                    if(ch == ' '){
+                        System.out.println("uhoh");
+                        break;
+                    }
+                    else{
+                        newer += ch;
+                    }
+                }
+                shortestDistanceIndex = json;
+                shortestDistance = Double.parseDouble(newer);
+                coor[2] = taskData[0].lotData.lots.get(0).getLat();
+                coor[3] = taskData[0].lotData.lots.get(0).getLng();
 
-            } catch (JSONException e) {
-                return null;
+            } catch (Exception e) {
+                System.out.println("rip!");
+                return new double[]{0,0,0,0};
             }
         } catch (IOException e) {
-            //System.out.println("hi!");
-            return null;
-            //raw_json = "";
+            System.out.println("rip!");
+            return new double[]{0,0,0,0};
         }
 
         //System.out.println("hi!"+taskData[0].lotData.lots.size());
         //System.out.println(taskData[0].lotData.lots.get(i).getName());
 
 
-
-        for(int i = 1; i < taskData[0].lotData.lots.size(); i++)
-        {
-            String params[] = {"units=imperial", "origins=" + taskData[0].pos[0] + "," + taskData[0].pos[1], "destinations="+taskData[1].lotData.lots.get(i).getLat()+","+taskData[1].lotData.lots.get(i).getLng(), "key=AIzaSyA571UCwHR860O78oW_xnGHri6lOhXzXns"};
+        for(int i = 0; i < taskData[0].lotData.lots.size(); i++) {
+            String params[] = {"units=imperial", "origins=" + taskData[0].pos[0] + "," + taskData[0].pos[1], "destinations=" + taskData[0].lotData.lots.get(i).getLat() + "," + taskData[0].lotData.lots.get(i).getLng(), "key=AIzaSyA571UCwHR860O78oW_xnGHri6lOhXzXns"};
             //str_base contains url_base and params
             String raw_json;
             //System.out.println("hi!");
@@ -122,23 +140,51 @@ public class DistanceCompute extends AsyncTask<TaskParams, Void, JSONObject> {
                 raw_json = DistanceUtil.convertStreamToString(DistanceUtil.requestMatrixDistance(url, params));
             } catch (IOException e) {
                 //System.out.println("hi!");
-                return null;
+                return new double[]{0,0,0,0};
                 //raw_json = "";
             }
 
 
             try {
-                JSONObject json = new JSONObject(raw_json);
-                return json;
-            } catch (JSONException e) {
-                return null;
+                JSONObject json = (JSONObject) parser.parse(raw_json);
+                System.out.println("suck!");
+                JSONArray temp = (JSONArray) json.get("rows");
+                JSONObject temp2 =  (JSONObject) temp.get(0);
+                temp = (JSONArray) temp2.get("elements");
+                temp2 = (JSONObject) temp.get(0);
+                temp2 =  (JSONObject) temp2.get("duration");
+                String time = (String) temp2.get("text");
+                String newer="";
+                for (char ch: time.toCharArray()) {
+                    if(ch == ' '){
+                        System.out.println("uhoh");
+                        break;
+                    }
+                    else{
+                        newer += ch;
+                    }
+                }
+
+                if(Double.parseDouble(newer) > shortestDistance){
+                    shortestDistance = Double.parseDouble(newer);
+                    shortestDistanceIndex = json;
+                    coor[2] = taskData[i].lotData.lots.get(0).getLat();
+                    coor[3] = taskData[i].lotData.lots.get(0).getLng();
+                }
+            } catch (Exception e) {
+                return new double[]{0,0,0,0};
             }
         }
-        return null;
+        System.out.println("the resultV");
+        for(int i=0; i<coor.length; i++) {
+            System.out.println(coor[i]);
+        }
+        return coor;
+
     }
 
-    protected JSONObject onPostExecute(JSONObject... result) {
-        MapsActivity.determineShortestPath(result[0]);
+    protected double[] onPostExecute(double[]... result) {
+        new DirectionCalculations().execute(result[0]);
         return result[0];
     }
 }

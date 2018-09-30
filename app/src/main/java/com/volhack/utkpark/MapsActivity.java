@@ -29,11 +29,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.PolyUtil;
 
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 
 class TaskParams{
     ParkingLotData lotData;
-    double pos[] = {0,0};
+    double pos[] = {0,0,0,0};
 
     TaskParams(ParkingLotData lotData, double pos[]){
         this.lotData = lotData;
@@ -51,6 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
     private ParkingLotData storedData;
+    public static String polyline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,12 +134,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initial_location, 17.0f));
                                 TaskParams taspar = new TaskParams(storedData, coor);
                                 new DistanceCompute().execute(taspar);
+
                             }
                         }
                     });
 
             //String params_1[] = {""}
-            addPolyLine("udnzEnrf_ONzAb@vDJbAf@zBHNRJj@zBTv@x@]lEoBl@WTMGGQQOq@Cw@Eq@A_AHcBA_@OyAI_@q@yBUo@IKWM[EU@UHi@\\");
+            addPolyLine("udnzEnrf_ONzAb@vDJbA`@nBg@Te@{Bg@iCEs@o@aESaBMLsCxAwAr@|@fD`Bw@?KES");
         }
     }
 
@@ -209,7 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //mMap.clear();
     }
 
-    public static void determineShortestPath(JSONObject data){
-
+    public static void finalPoly(String data){
+        polyline = data;
     }
 }
