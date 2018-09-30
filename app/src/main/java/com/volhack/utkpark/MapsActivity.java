@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.location.Location;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +32,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean mPermissionDenied = false;
     private boolean mRequestingLocationUpdates = true;
     private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+    }
+
+
+    private void startLocationUpdates() {
+        if(mLocationCallback != null || mLocationCallback != null) {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+                    mLocationCallback,
+                    null /* Looper */);
+            Log.d("STATE", "hi!");
+        }
+    }
+
+
 
     /**
      * Manipulates the map once available.
@@ -79,6 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             }
                         }
                     });
+
         }
     }
 
